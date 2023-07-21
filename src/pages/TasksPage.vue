@@ -6,7 +6,8 @@
           <!-- Add new Task -->
           <NewTask @added="handelAddedTask" />
           <!-- List of uncompleted tasks -->
-          <Tasks :tasks="uncompletedTasks" />
+          <Tasks :tasks="uncompletedTasks" @updated="handelUpdatedTask" @completed="handelCompletedTask"
+            @removed="handelRemovedTask" />
           <!-- show toggle button -->
           <div class="text-center my-3" v-show="showToggleCompletedBtn">
             <button class="btn btn-sm btn-secondary" @click="showCompletedTasks = !showCompletedTasks">
@@ -15,7 +16,8 @@
             </button>
           </div>
           <!-- list of completed tasks -->
-          <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks" />
+          <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks"
+            @updated="handelUpdatedTask" @completed="handelCompletedTask" @removed="handelRemovedTask" />
         </div>
       </div>
     </div>
@@ -24,7 +26,7 @@
 
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { allTasks, createTask } from '../http/task-api';
+import { allTasks, createTask, updateTask, completeTask, removeTask } from '../http/task-api';
 import Tasks from '../components/tasks/Tasks.vue';
 import NewTask from '../components/tasks/NewTask.vue';
 
@@ -43,5 +45,24 @@ const showCompletedTasks = ref(false);
 const handelAddedTask = async (newTask) => {
   const { data: createdTask } = await createTask(newTask);
   tasks.value.unshift(createdTask.data);
+}
+const handelUpdatedTask = async (task) => {
+  const { data: updatedTask } = await updateTask(task.id, {
+    name: task.name,
+  });
+  const currentTask = tasks.value.find(item => item.id === task.id);
+  currentTask.name = updatedTask.data.name;
+}
+const handelCompletedTask = async (task) => {
+  const { data: updatedTask } = await completeTask(task.id, {
+    is_completed: task.is_completed,
+  });
+  const currentTask = tasks.value.find(item => item.id === task.id);
+  currentTask.is_completed = updatedTask.data.is_completed;
+}
+const handelRemovedTask = async (task) => {
+  await removeTask(task.id);
+  const index = tasks.value.findIndex(item => item.id === task.id);
+  tasks.value.splice(index, 1);
 }
 </script>
