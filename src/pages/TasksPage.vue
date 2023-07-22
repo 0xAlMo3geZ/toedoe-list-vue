@@ -27,20 +27,19 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
 import { useTaskStore } from "../stores/task";
-import { allTasks, createTask, updateTask, completeTask, removeTask } from '../http/task-api';
+import { createTask, updateTask, completeTask, removeTask } from '../http/task-api';
 import Tasks from '../components/tasks/Tasks.vue';
 import NewTask from '../components/tasks/NewTask.vue';
 import { storeToRefs } from 'pinia';
 
 const store = useTaskStore();
 const { completedTasks, uncompletedTasks } = storeToRefs(store);
-// store.$patch({ task: { id: 1, name: "OhhhhhCaml", is_completed: false } });
+const { fetchAllTasks } = store;
 
 const tasks = ref([]);
 
 onMounted(async () => {
-  const { data } = await allTasks();
-  tasks.value = data.data;
+  await fetchAllTasks();
 })
 
 const showToggleCompletedBtn = computed(() => uncompletedTasks.value.length > 0 && completedTasks.value.length > 0);
