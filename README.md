@@ -1,4 +1,4 @@
-# laravel-api-vue-client
+# toedoe-list-vue
 
 A Vue.js learning project, working as client for my [toedoe-list-api](https://github.com/muzakonthecode/toedoe-list-api) learning project.
 
