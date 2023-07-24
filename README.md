@@ -1,6 +1,6 @@
 # laravel-api-vue-client
 
-A Vue.js learning project, working as client for my [laravel api](https://github.com/muzakonthecode/laravel-api) learning project.
+A Vue.js learning project, working as client for my [toedoe-list-api](https://github.com/muzakonthecode/toedoe-list-api) learning project.
 
 ## Recommended IDE Setup
 
